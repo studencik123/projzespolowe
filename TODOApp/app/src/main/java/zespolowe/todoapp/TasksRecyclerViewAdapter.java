@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import zespolowe.todoapp.dbo.Task;
+
 public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecyclerViewAdapter.TaskViewHolder>
 {
 
@@ -57,9 +59,9 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
     public void onBindViewHolder(TaskViewHolder holder, int position)
     {
         Task task = tasks.get(position);
-        holder.taskName.setText(task.getTaskName());
-        holder.taskType.setText(task.getTaskType());
-        holder.taskDate.setText(task.getTaskDate());
+        holder.taskName.setText(task.subject);
+        holder.taskType.setText("task.getTaskType()");
+        holder.taskDate.setText("task.getTaskDate()");
     }
 
     // Total number of rows

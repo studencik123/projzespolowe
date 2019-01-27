@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import zespolowe.todoapp.dbo.Task;
 
 public class CreateTaskActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener
 {
@@ -84,8 +85,8 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
     private void createTaskButtonAction()
     {
         Task task = new Task();
-        task.setTaskName(taskNameInput.getEditText().toString());
-        task.setTaskType(taskTypesSpinner.getSelectedItem().toString());
+        task.subject = taskNameInput.getEditText().toString();
+        task.xmlWorkflow = taskTypesSpinner.getSelectedItem().toString();
     }
 
     public void setupSpinnerItems()

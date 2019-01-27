@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,8 +13,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
+import zespolowe.todoapp.dbo.Task;
 
 public class MainActivity extends AppCompatActivity implements TasksRecyclerViewAdapter.ItemClickListener
 {
@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
     RecyclerView tasksRecyclerView;
     LinearLayoutManager linearLayoutManager;
     SwipeController swipeController = null;
-    ArrayList<Task> tasks;
+    List<Task> tasks;
+    TasksService service;
 
     //Przycisk przejscia do tworzenia taska
     private FloatingActionButton floatingActionButton;
@@ -47,8 +48,9 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        this.tasks = new ArrayList<>();
-        addTasks(tasks);
+        service = new TasksService(getApplication());
+
+        tasks = service.getList();
 
         //setup adaptera listy taskow
         setupRecyclerViewAdapter(tasks);
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         goToTaskActivity(view);
     }
 
-    public void setupRecyclerViewAdapter(ArrayList<Task> taskList)
+    public void setupRecyclerViewAdapter(List<Task> taskList)
     {
         tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -114,28 +116,6 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
                 swipeController.onDraw(c);
             }
         });
-    }
-
-    //narazie taski w ten sposob
-    public void addTasks(ArrayList<Task> tasks)
-    {
-        Task task = new Task();
-        task.setTaskName("Visiting Doctor House");
-        task.setTaskType("Doctor Appointment");
-        task.setTaskDate("10/12/2018");
-        tasks.add(task);
-
-        Task task2 = new Task();
-        task2.setTaskName("Repairing car radio");
-        task2.setTaskType("Car Repair");
-        task2.setTaskDate("12/12/2018");
-        tasks.add(task2);
-
-        Task task3 = new Task();
-        task3.setTaskName("Shopping groceries");
-        task3.setTaskType("Shopping");
-        task3.setTaskDate("13/12/2018");
-        tasks.add(task3);
     }
 
     //todo gdy bedzie DB z taskami tutaj operacja dodania nowego taska do DB

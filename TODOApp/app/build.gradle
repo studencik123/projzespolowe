@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "zespolowe.todoapp"
         minSdkVersion 22
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -19,6 +19,20 @@ android {
 }
 
 dependencies {
+    def room_version = "1.1.1"
+
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version" // use kapt for Kotlin
+
+    // optional - RxJava support for Room
+    implementation "android.arch.persistence.room:rxjava2:$room_version"
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation "android.arch.persistence.room:guava:$room_version"
+
+    // Test helpers
+    testImplementation "android.arch.persistence.room:testing:$room_version"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
