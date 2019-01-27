@@ -6,6 +6,9 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+
+import java.util.Date;
+
 import zespolowe.todoapp.workflow.Workflow;
 import zespolowe.todoapp.workflow.XmlParser;
 
@@ -19,6 +22,8 @@ public class Task {
 
     @NonNull
     public String subject;
+
+    public Date date;
 
     @NonNull
     @ColumnInfo(name = "workflow")

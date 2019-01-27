@@ -2,6 +2,9 @@ package zespolowe.todoapp;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import zespolowe.todoapp.dbo.Task;
 import zespolowe.todoapp.workflow.Action;
@@ -44,7 +47,29 @@ public class TransitionRunner {
                     return false;
             }
         }
+        if (fieldValue instanceof Date) {
+            try {
+                Date date = new SimpleDateFormat("dd/MM/yyyy").parse(value);
+                switch (type) {
+                    case "equals":
+                        return areDatesEqual((Date) fieldValue, date);
+                    case "notEqual":
+                        return !areDatesEqual((Date) fieldValue, date);
+                    case "greater":
+                        return ((Date) fieldValue).after(date);
+                    case "lower":
+                        return date.after((Date) fieldValue);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
         return false;
+    }
+
+    private static boolean areDatesEqual(Date date1, Date date2) {
+        return date1.getDate() == date2.getDate();
     }
 
     private static void runAction(Task task, Action action) {
@@ -67,6 +92,13 @@ public class TransitionRunner {
     }
 
     private static Object getTypedValue(Type type, String value) {
+        if (type == Date.class) {
+            try {
+                return new SimpleDateFormat("dd/MM/yyyy").parse(value);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         return value;
     }
 }

@@ -4,11 +4,13 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 @Database(entities = { Task.class, Workflow.class }, version = 2, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class TaskRoomDatabase extends RoomDatabase {
     public abstract TaskDao taskDao();
     public abstract WorkflowDao workflowDao();
