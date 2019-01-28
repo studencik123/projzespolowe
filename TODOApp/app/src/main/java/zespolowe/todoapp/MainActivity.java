@@ -18,7 +18,6 @@ import java.util.List;
 
 import zespolowe.todoapp.dbo.Task;
 import zespolowe.todoapp.dbo.TaskDao;
-import zespolowe.todoapp.dbo.TaskDao_Impl;
 
 public class MainActivity extends AppCompatActivity implements TasksRecyclerViewAdapter.ItemClickListener
 {
@@ -78,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
+        if (id == R.id.action_workflows)
         {
+            goToWorkflowsActivity();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         intent.putExtra("task_id", tasks.get(position).id);
         intent.putExtra("subject", tasks.get(position).subject);
         intent.putExtra("state", tasks.get(position).state);
-        intent.putExtra("date", tasks.get(position).date);
+        //intent.putExtra("date", tasks.get(position).date.getTime());
         intent.putExtra("workflow", tasks.get(position).xmlWorkflow);
         startActivity(intent);
     }
@@ -146,6 +146,13 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
     public void goToCreateTaskActivity(View view)
     {
         Intent intent = new Intent(MainActivity.this, CreateTaskActivity.class);
+        startActivity(intent);
+    }
+
+    //przejscie do listy Workflows
+    public void goToWorkflowsActivity()
+    {
+        Intent intent = new Intent(MainActivity.this, WorkflowsActivity.class);
         startActivity(intent);
     }
 }

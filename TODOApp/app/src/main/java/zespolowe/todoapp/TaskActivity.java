@@ -34,11 +34,19 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId())
         {
 
-            case R.id.button_done:
+            case R.id.button_1:
                 // zmiana stanu tasku na done
                 break;
 
-            case R.id.button_delay:
+            case R.id.button_2:
+                // zmiana stanu tasku na delay
+                break;
+
+            case R.id.button_3:
+                // zmiana stanu tasku na delay
+                break;
+
+            case R.id.button_4:
                 // zmiana stanu tasku na delay
                 break;
 
@@ -64,8 +72,8 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         stateTextView.setText(state);
 
         //todo notes mapa data
-        doneTaskButton = (Button) findViewById(R.id.button_done);
-        delayTaskButton = (Button) findViewById(R.id.button_delay);
+        doneTaskButton = (Button) findViewById(R.id.button_1);
+        delayTaskButton = (Button) findViewById(R.id.button_2);
         doneTaskButton.setOnClickListener(this);
         delayTaskButton.setOnClickListener(this);
     }
