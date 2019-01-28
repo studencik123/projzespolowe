@@ -1,14 +1,10 @@
 package zespolowe.todoapp;
 
+import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.RingtoneManager;
 import android.os.SystemClock;
-import android.support.v4.app.NotificationCompat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -23,6 +19,8 @@ import zespolowe.todoapp.workflow.Action;
 import zespolowe.todoapp.workflow.Transition;
 
 public class TransitionRunner {
+    public static final int REQUEST_CODE = 0;
+
     public static List<String> getAvailableStates(Task task) {
         List<String> list = new ArrayList<>();
         for (Transition transition : task.GetWorkflow().transitions) {
@@ -66,9 +64,9 @@ public class TransitionRunner {
     private static boolean compareByType(Object fieldValue, String value, String type) {
         if (fieldValue instanceof String) {
             switch (type) {
-                case "equals":
+                case "=":
                     return value.equals(fieldValue);
-                case "notEqual":
+                case "!=":
                     return !value.equals(fieldValue);
                 default:
                     return false;
@@ -78,14 +76,18 @@ public class TransitionRunner {
             try {
                 Date date = new SimpleDateFormat("dd/MM/yyyy").parse(value);
                 switch (type) {
-                    case "equals":
+                    case "=":
                         return areDatesEqual((Date) fieldValue, date);
-                    case "notEqual":
+                    case "!=":
                         return !areDatesEqual((Date) fieldValue, date);
-                    case "greater":
+                    case ">":
                         return ((Date) fieldValue).after(date);
-                    case "lower":
+                    case "<":
                         return date.after((Date) fieldValue);
+                    case ">=":
+                        return !date.after((Date) fieldValue);
+                    case "<=":
+                        return !((Date) fieldValue).after(date);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -135,29 +137,4 @@ public class TransitionRunner {
     private static void runNotifyAction() {
 
     }
-
-//    public void scheduleNotification(Context context, long delay, int notificationId) {//delay is after how much time(in millis) from current time you want to schedule the notification
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-//                .setContentTitle(context.getString(R.string.title))
-//                .setContentText(context.getString(R.string.content))
-//                .setAutoCancel(true)
-//                .setSmallIcon(R.drawable.app_icon)
-//                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.app_icon)).getBitmap())
-//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-//
-//        Intent intent = new Intent(context, YourActivity.class);
-//        PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        builder.setContentIntent(activity);
-//
-//        Notification notification = builder.build();
-//
-//        Intent notificationIntent = new Intent(context, MyNotificationPublisher.class);
-//        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, notificationId);
-//        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-//    }
 }

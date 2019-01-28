@@ -76,7 +76,7 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
                     "<state name=\"start\"/>\n" +
                     "<state name=\"next\"/>\n" +
                     "<transition from=\"start\" to=\"next\">\n" +
-                    "<action type=\"equals\" field=\"subject\" value=\"temat\"/>\n" +
+                    "<action type=\"=\" field=\"subject\" value=\"temat\"/>\n" +
                     "<action type=\"set\" field=\"subject\" value=\"nowy temat\"/>\n" +
                     "</transition>\n" +
                     "</workflow>";
