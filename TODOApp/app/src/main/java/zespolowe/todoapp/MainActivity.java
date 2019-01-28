@@ -13,12 +13,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import zespolowe.todoapp.dbo.Task;
-import zespolowe.todoapp.dbo.TaskDao;
-import zespolowe.todoapp.dbo.TaskDao_Impl;
 
 public class MainActivity extends AppCompatActivity implements TasksRecyclerViewAdapter.ItemClickListener
 {

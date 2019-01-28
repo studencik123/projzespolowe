@@ -14,18 +14,35 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import zespolowe.todoapp.dbo.Task;
 import zespolowe.todoapp.workflow.Action;
 import zespolowe.todoapp.workflow.Transition;
 
 public class TransitionRunner {
-    public static boolean runTransition(Task task, Transition transition) {
+    public static List<String> getAvailableStates(Task task) {
+        List<String> list = new ArrayList<>();
+        for (Transition transition : task.GetWorkflow().transitions) {
+            if (validateTransition(task, transition))
+                list.add(transition.to);
+        }
+        return list;
+    }
+
+    private static boolean validateTransition(Task task, Transition transition) {
         for (Action validator : transition.validators) {
             if (!validate(task, validator))
                 return false;
         }
+        return true;
+    }
+
+    public static boolean runTransition(Task task, Transition transition) {
+        if (!validateTransition(task, transition))
+            return false;
         for (Action action : transition.actions) {
             runAction(task, action);
         }

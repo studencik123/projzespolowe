@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Workflow {
-    public List<String> states;
+    public String state;
 
     public List<Transition> transitions;
 
     public Workflow() {
-        this.states = new ArrayList<>();
         this.transitions = new ArrayList<>();
     }
 }

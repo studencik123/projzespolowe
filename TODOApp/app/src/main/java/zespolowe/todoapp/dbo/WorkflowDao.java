@@ -1,9 +1,9 @@
 package zespolowe.todoapp.dbo;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -11,6 +11,9 @@ import java.util.List;
 public interface WorkflowDao {
         @Insert
         void insert(Workflow workflow);
+
+        @Update
+        void update(Workflow workflow);
 
         @Query("DELETE FROM workflows WHERE id = :id")
         void delete(int id);
@@ -20,6 +23,9 @@ public interface WorkflowDao {
 
         @Query("SELECT * FROM workflows WHERE id = :id ")
         Workflow getWorkflow(int id);
+
+        @Query("SELECT * FROM workflows WHERE name = :name")
+        Workflow getWorkflow(String name);
 
         @Query("DELETE FROM workflows")
         void deleteAll();

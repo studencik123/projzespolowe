@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import zespolowe.todoapp.dbo.Task;
 import zespolowe.todoapp.workflow.Action;
@@ -44,5 +45,32 @@ public class TransitionRunnerTest {
 
         assertFalse(TransitionRunner.runTransition(task, transition));
         assertEquals("temat", task.subject);
+    }
+
+    @Test
+    public void get_available_states()
+    {
+        Task task = new Task();
+        task.subject = "temat";
+        Workflow workflow = new Workflow();
+        Transition transition = new Transition("start", "next");
+        transition.validators.add(new Action("equals", "subject", "temat"));
+        transition.actions.add(new Action("set", "subject", "nowy temat"));
+        Transition transition2 = new Transition("start", "previous");
+        transition2.validators.add(new Action("equals", "subject", "XtematX"));
+        transition2.actions.add(new Action("set", "subject", "nowy temat"));
+        Transition transition3 = new Transition("start", "present");
+        transition3.validators.add(new Action("equals", "subject", "temat"));
+        transition3.actions.add(new Action("set", "subject", "nowy temat"));
+        workflow.transitions.add(transition);
+        workflow.transitions.add(transition2);
+        workflow.transitions.add(transition3);
+        task.workflow = workflow;
+
+        List<String> types = TransitionRunner.getAvailableStates(task);
+
+        assertEquals(2, types.size());
+        assertEquals("next", types.get(0));
+        assertEquals("present", types.get(1));
     }
 }

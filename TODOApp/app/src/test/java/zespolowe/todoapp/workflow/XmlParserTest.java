@@ -12,18 +12,20 @@ public class XmlParserTest {
     @Test
     public void parse_valid_xml()
     {
-        String xml = "<workflow>\n" +
-                "<state name=\"start\"/>\n" +
-                "<state name=\"next\"/>\n" +
+        String xml = "<workflow state=\"start\">\n" +
                 "<transition from=\"start\" to=\"next\">\n" +
                 "<action type=\"equals\" field=\"subject\" value=\"temat\"/>\n" +
                 "<action type=\"set\" field=\"subject\" value=\"nowy temat\"/>\n" +
                 "</transition>\n" +
+                "<transition from=\"start\" to=\"previous\">\n" +
+                "<action type=\"equals\" field=\"subject\" value=\"XtematX\"/>\n" +
+                "<action type=\"set\" field=\"subject\" value=\"stary temat\"/>\n" +
+                "<action type=\"set\" field=\"date\" value=\"02/01/2018\"/>\n" +
+                "</transition>\n" +
                 "</workflow>";
 
         Workflow workflow = XmlParser.parse(xml);
-        assertEquals("start", workflow.states.get(0));
-        assertEquals("next", workflow.states.get(1));
+        assertEquals("start", workflow.state);
         assertEquals("start", workflow.transitions.get(0).from);
         assertEquals("next", workflow.transitions.get(0).to);
         assertEquals("equals", workflow.transitions.get(0).validators.get(0).type);
@@ -37,9 +39,7 @@ public class XmlParserTest {
     @Test
     public void parse__and_run_valid_xml()
     {
-        String xml = "<workflow>\n" +
-                "<state name=\"start\"/>\n" +
-                "<state name=\"next\"/>\n" +
+        String xml = "<workflow state=\"start\">\n" +
                 "<transition from=\"start\" to=\"next\">\n" +
                 "<action type=\"equals\" field=\"subject\" value=\"temat\"/>\n" +
                 "<action type=\"set\" field=\"subject\" value=\"nowy temat\"/>\n" +
