@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zespolowe.todoapp.dbo.Task;
+import zespolowe.todoapp.dbo.TaskDao;
+import zespolowe.todoapp.dbo.TaskDao_Impl;
 
 public class MainActivity extends AppCompatActivity implements TasksRecyclerViewAdapter.ItemClickListener
 {
@@ -83,10 +85,17 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         return super.onOptionsItemSelected(item);
     }
 
+    //przejscie do aktywnosci konkretnego taska
     @Override
     public void onItemClick(View view, int position)
     {
-        goToTaskActivity(view);
+        Intent intent = new Intent(MainActivity.this, TaskActivity.class);
+        intent.putExtra("task_id", tasks.get(position).id);
+        intent.putExtra("subject", tasks.get(position).subject);
+        intent.putExtra("state", tasks.get(position).state);
+        intent.putExtra("date", tasks.get(position).date);
+        intent.putExtra("workflow", tasks.get(position).xmlWorkflow);
+        startActivity(intent);
     }
 
     public void setupRecyclerViewAdapter(List<Task> taskList)
@@ -137,13 +146,6 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
     public void goToCreateTaskActivity(View view)
     {
         Intent intent = new Intent(MainActivity.this, CreateTaskActivity.class);
-        startActivity(intent);
-    }
-
-    //przejscie do aktywnosci konkretnego Taska
-    public void goToTaskActivity(View view)
-    {
-        Intent intent = new Intent(MainActivity.this, TaskActivity.class);
         startActivity(intent);
     }
 }

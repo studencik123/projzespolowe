@@ -6,4 +6,7 @@
         <item>Car repair</item>
         <item>Doctor appointment</item>
     </string-array>
+
+    <string name="taskView_actionbutton_done">Done</string>string>
+    <string name="taskView_actionbutton_delay">Delay</string>string>
 </resources>

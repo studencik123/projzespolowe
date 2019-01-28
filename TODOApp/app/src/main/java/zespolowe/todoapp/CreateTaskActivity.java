@@ -54,12 +54,7 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        taskNameInput = (TextInputLayout) findViewById(R.id.task_name_input);
-        taskNotesInput = (TextInputLayout) findViewById(R.id.task_notes_input);
-        dateTextView = (TextView) findViewById(R.id.task_date_text);
-        datePickButton = (Button) findViewById(R.id.button_date);
-        taskTypesSpinner = (Spinner) findViewById(R.id.spinner_task_types);
-
+        setupView();
         setupSpinnerItems();
         setupDatePicker();
 
@@ -87,6 +82,15 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         Task task = new Task();
         task.subject = taskNameInput.getEditText().toString();
         task.xmlWorkflow = taskTypesSpinner.getSelectedItem().toString();
+    }
+
+    public void setupView()
+    {
+        taskNameInput = (TextInputLayout) findViewById(R.id.task_name_input);
+        taskNotesInput = (TextInputLayout) findViewById(R.id.task_notes_input);
+        dateTextView = (TextView) findViewById(R.id.task_date_text);
+        datePickButton = (Button) findViewById(R.id.button_date);
+        taskTypesSpinner = (Spinner) findViewById(R.id.spinner_task_types);
     }
 
     public void setupSpinnerItems()
