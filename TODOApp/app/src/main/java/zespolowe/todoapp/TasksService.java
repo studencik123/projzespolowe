@@ -1,6 +1,7 @@
 package zespolowe.todoapp;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.util.List;
 
@@ -47,11 +48,11 @@ public class TasksService {
         return TransitionRunner.getAvailableStates(task);
     }
 
-    public void transition(int taskId, String stateTo) {
+    public void transition(int taskId, String stateTo, Context context) {
         Task task = getTask(taskId);
-        for (Transition transition : task.workflow.transitions) {
+        for (Transition transition : task.GetWorkflow().transitions) {
             if (transition.from.equals(task.state) && transition.to.equals(stateTo)){
-                TransitionRunner.runTransition(task, transition);
+                TransitionRunner.runTransition(task, transition, context);
                 break;
             }
         }

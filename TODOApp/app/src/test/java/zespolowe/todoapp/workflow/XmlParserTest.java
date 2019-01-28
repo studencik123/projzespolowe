@@ -50,7 +50,7 @@ public class XmlParserTest {
         Task task = new Task();
         task.subject = "temat";
 
-        assertTrue(TransitionRunner.runTransition(task, workflow.transitions.get(0)));
+        assertTrue(TransitionRunner.runTransition(task, workflow.transitions.get(0), null));
         assertEquals("nowy temat", task.subject);
     }
 }

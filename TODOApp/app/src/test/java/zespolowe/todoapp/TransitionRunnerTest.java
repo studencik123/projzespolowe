@@ -29,7 +29,7 @@ public class TransitionRunnerTest {
         transition.actions.add(new Action("set", "subject", "nowy temat"));
         transition.actions.add(new Action("set", "date", "29/01/2019"));
 
-        assertTrue(TransitionRunner.runTransition(task, transition));
+        assertTrue(TransitionRunner.runTransition(task, transition, null));
         assertEquals("nowy temat", task.subject);
         assertEquals(new SimpleDateFormat("dd/MM/yyyy").parse("29/01/2019"), task.date);
     }
@@ -43,7 +43,7 @@ public class TransitionRunnerTest {
         transition.validators.add(new Action("=", "subject", "XtematX"));
         transition.actions.add(new Action("set", "subject", "nowy temat"));
 
-        assertFalse(TransitionRunner.runTransition(task, transition));
+        assertFalse(TransitionRunner.runTransition(task, transition, null));
         assertEquals("temat", task.subject);
     }
 

@@ -21,10 +21,10 @@ public interface WorkflowDao {
         @Query("SELECT * from workflows ORDER BY id ASC")
         List<Workflow> getWorkflows();
 
-        @Query("SELECT * FROM workflows WHERE id = :id ")
+        @Query("SELECT * FROM workflows WHERE id = :id LIMIT 1")
         Workflow getWorkflow(int id);
 
-        @Query("SELECT * FROM workflows WHERE name = :name")
+        @Query("SELECT * FROM workflows WHERE name LIKE :name LIMIT 1")
         Workflow getWorkflow(String name);
 
         @Query("DELETE FROM workflows")

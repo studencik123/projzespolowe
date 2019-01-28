@@ -21,7 +21,7 @@ public interface TaskDao {
     @Query("SELECT * from tasks ORDER BY id ASC")
     List<Task> getAllTasks();
 
-    @Query("SELECT * FROM tasks WHERE id = :id ")
+    @Query("SELECT * FROM tasks WHERE id = :id LIMIT 1")
     Task getTask(int id);
 
     @Query("DELETE FROM tasks")

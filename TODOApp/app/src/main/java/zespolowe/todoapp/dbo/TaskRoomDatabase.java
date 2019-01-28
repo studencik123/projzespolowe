@@ -72,12 +72,11 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
             taskDao.deleteAll();
             workflowDao.deleteAll();
 
-            String xml = "<workflow>\n" +
-                    "<state name=\"start\"/>\n" +
-                    "<state name=\"next\"/>\n" +
+            String xml = "<workflow state=\"start\">\n" +
                     "<transition from=\"start\" to=\"next\">\n" +
                     "<action type=\"=\" field=\"subject\" value=\"temat\"/>\n" +
-                    "<action type=\"set\" field=\"subject\" value=\"nowy temat\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"Opis zadania\"/>\n" +
+                    "<action type=\"notify\" field=\"5000\" value=\"Treść powiadomienia\"/>\n" +
                     "</transition>\n" +
                     "</workflow>";
 
