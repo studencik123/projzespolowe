@@ -32,7 +32,8 @@ public class TasksService {
         return taskDao.getTask(id);
     }
 
-    public void Transition(Task task, String stateTo) {
+    public void Transition(int taskId, String stateTo) {
+        Task task = GetTask(taskId);
         for (Transition transition : task.workflow.transitions) {
             if (transition.from.equals(task.state) && transition.to.equals(stateTo)){
                 TransitionRunner.runTransition(task, transition);

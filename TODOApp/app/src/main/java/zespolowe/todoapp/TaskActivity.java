@@ -49,10 +49,10 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
 
     public void retrieveIntent()
     {
-        int id = getIntent().getExtras().getInt("task_id");
-        String subject = getIntent().getExtras().getString("subject");
-        String state = getIntent().getExtras().getString("state");
-        Date date = new Date(getIntent().getExtras().getString("date"));
+        id = getIntent().getExtras().getInt("task_id");
+        subject = getIntent().getExtras().getString("subject");
+        state = getIntent().getExtras().getString("state");
+        date = new Date(getIntent().getExtras().getLong("date"));
     }
 
     public void setupView()

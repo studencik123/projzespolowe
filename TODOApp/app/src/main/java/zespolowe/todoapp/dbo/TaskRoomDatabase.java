@@ -9,7 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-@Database(entities = { Task.class, Workflow.class }, version = 2, exportSchema = false)
+@Database(entities = { Task.class, Workflow.class }, version = 3, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class TaskRoomDatabase extends RoomDatabase {
     public abstract TaskDao taskDao();
