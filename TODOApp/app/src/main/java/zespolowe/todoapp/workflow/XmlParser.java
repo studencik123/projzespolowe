@@ -16,7 +16,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class XmlParser {
     public static List<String> ValidatorTypes = new ArrayList<>(
-            Arrays.asList("equals", "notEqual", "greater", "lower"));
+            Arrays.asList("equals", "notEqual", "greater", "lower", "greaterEqual", "lowerEqual"));
 
     public static Workflow parse(String xmlWorkflow) {
         Workflow workflow = new Workflow();

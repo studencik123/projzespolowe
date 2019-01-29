@@ -71,9 +71,9 @@ public class TransitionRunner {
     private static boolean compareByType(Object fieldValue, String value, String type) {
         if (fieldValue instanceof String) {
             switch (type) {
-                case "=":
+                case "equals":
                     return compareStrings((String) fieldValue, value);
-                case "!=":
+                case "notEqual":
                     return !compareStrings((String) fieldValue, value);
                 default:
                     return false;
@@ -82,17 +82,17 @@ public class TransitionRunner {
         if (fieldValue instanceof Date) {
             Date date = getTime(value);
             switch (type) {
-                case "=":
+                case "equals":
                     return areDatesEqual((Date) fieldValue, date);
-                case "!=":
+                case "notEqual":
                     return !areDatesEqual((Date) fieldValue, date);
-                case ">":
+                case "greater":
                     return ((Date) fieldValue).after(date);
-                case "<":
+                case "lower":
                     return date.after((Date) fieldValue);
-                case ">=":
+                case "greaterEqual":
                     return !date.after((Date) fieldValue);
-                case "<=":
+                case "lowerEqual":
                     return !((Date) fieldValue).after(date);
             }
             return false;
