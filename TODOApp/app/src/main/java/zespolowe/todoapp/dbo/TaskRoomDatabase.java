@@ -72,18 +72,94 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
             taskDao.deleteAll();
             workflowDao.deleteAll();
 
-            String xml = "<workflow state=\"start\">\n" +
-                    "<transition from=\"start\" to=\"next\">\n" +
-                    "<action type=\"=\" field=\"subject\" value=\"temat\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"Opis zadania\"/>\n" +
-                    "<action type=\"notify\" field=\"5000\" value=\"Treść powiadomienia\"/>\n" +
+            String xml = "<workflow state=\"To do\">\n" +
+                    "<transition from=\"To do\" to=\"Appointed\">\n" +
+                    "<action type=\"set\" field=\"description\" value=\"Appointment has been planned\"/>\n" +
+                    "<action type=\"notify\" field=\"5000\" value=\"Appointment!\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Appointed\" to=\"Visited\">\n" +
+                    "<action type=\"set\" field=\"description\" value=\"Appointment completed\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Appointed\" to=\"Postponed\">\n" +
+                    "<action type=\"<\" field=\"date\" value=\"now\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"Appointment postponed\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Postponed\" to=\"Visited\">\n" +
+                    "<action type=\"set\" field=\"description\" value=\"Appointment completed\"/>\n" +
+                    "<action type=\"set\" field=\"date\" value=\"null\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Visited\" to=\"Appointed\">\n" +
+                    "<action type=\"set\" field=\"description\" value=\"Appointment has been planned\"/>\n" +
+                    "<action type=\"notify\" field=\"5000\" value=\"Appointment!\"/>\n" +
                     "</transition>\n" +
                     "</workflow>";
 
             Workflow workflow = new Workflow();
-            workflow.name = "testowe";
+            workflow.name = "Appointment";
             workflow.workflow = xml;
             workflowDao.insert(workflow);
+
+            String xml2 = "<workflow state=\"To do\">\n" +
+                    "<transition from=\"To do\" to=\"Plugged\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%plugged%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Reset printer\" to=\"Plugged\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%plugged%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Reset PC\" to=\"Plugged\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%plugged%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"To do\" to=\"Reset printer\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Plugged\" to=\"Reset printer\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Reset PC\" to=\"Reset printer\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"To do\" to=\"Reset PC\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Plugged\" to=\"Reset PC\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Reset printer\" to=\"Reset PC\">\n" +
+                    "<action type=\"!=\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Plugged\" to=\"Call IT\">\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%plugged%\"/>\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"All failed\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Reset printer\" to=\"Call IT\">\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%plugged%\"/>\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"All failed\"/>\n" +
+                    "</transition>\n" +
+                    "<transition from=\"Reset PC\" to=\"Call IT\">\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%plugged%\"/>\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                    "<action type=\"=\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"All failed\"/>\n" +
+                    "</transition>\n" +
+                    "</workflow>";
+
+            Workflow workflow2 = new Workflow();
+            workflow2.name = "Printer error";
+            workflow2.workflow = xml2;
+            workflowDao.insert(workflow2);
 
             Task task = new Task();
             task.subject = "Visiting Doctor House";
@@ -100,9 +176,9 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
             taskDao.insert(task2);
 
             Task task3 = new Task();
-            task3.subject = "Shopping groceries";
-            task3.type = workflow.name;
-            task3.xmlWorkflow = xml;
+            task3.subject = "Broken printer";
+            task3.type = workflow2.name;
+            task3.xmlWorkflow = xml2;
             task3.state = task.GetWorkflow().state;
             taskDao.insert(task3);
             return null;

@@ -21,17 +21,33 @@ public class TransitionRunnerTest {
     public void run_valid_transition() throws Exception
     {
         Task task = new Task();
+        task.subject = "XtematX";
+        task.date = new Date();
+        Transition transition = new Transition("start", "next");
+        transition.validators.add(new Action("=", "subject", "%temat%"));
+        transition.validators.add(new Action("<=", "date", "now"));
+        transition.actions.add(new Action("set", "subject", "+ nowy"));
+        transition.actions.add(new Action("set", "date", "29/01/2019"));
+
+        assertTrue(TransitionRunner.runTransition(task, transition, null));
+        assertEquals("XtematX nowy", task.subject);
+        assertEquals(new SimpleDateFormat("dd/MM/yyyy").parse("29/01/2019"), task.date);
+    }
+    @Test
+    public void run_valid_transition2() throws Exception
+    {
+        Task task = new Task();
         task.subject = "temat";
         task.date = new Date();
         Transition transition = new Transition("start", "next");
         transition.validators.add(new Action("=", "subject", "temat"));
-        transition.validators.add(new Action(">", "date", "27/01/2019"));
+        transition.validators.add(new Action("<=", "date", "now"));
         transition.actions.add(new Action("set", "subject", "nowy temat"));
-        transition.actions.add(new Action("set", "date", "29/01/2019"));
+        transition.actions.add(new Action("set", "date", "null"));
 
         assertTrue(TransitionRunner.runTransition(task, transition, null));
         assertEquals("nowy temat", task.subject);
-        assertEquals(new SimpleDateFormat("dd/MM/yyyy").parse("29/01/2019"), task.date);
+        assertEquals(null, task.date);
     }
 
     @Test

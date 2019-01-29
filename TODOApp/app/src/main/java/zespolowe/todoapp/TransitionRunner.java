@@ -72,9 +72,9 @@ public class TransitionRunner {
         if (fieldValue instanceof String) {
             switch (type) {
                 case "=":
-                    return value.equals(fieldValue);
+                    return compareStrings((String) fieldValue, value);
                 case "!=":
-                    return !value.equals(fieldValue);
+                    return !compareStrings((String) fieldValue, value);
                 default:
                     return false;
             }
@@ -100,6 +100,17 @@ public class TransitionRunner {
         return false;
     }
 
+    private static boolean compareStrings(String field, String value) {
+        String clearValue = value.replace("%", "");
+        if (value.startsWith("%") && value.endsWith("%"))
+            return field.contains(clearValue);
+        if (value.startsWith("%"))
+            return field.endsWith(clearValue);
+        if (value.endsWith("%"))
+            return field.startsWith(clearValue);
+        return field.equals(value);
+    }
+
     private static boolean areDatesEqual(Date date1, Date date2) {
         return date1.getDate() == date2.getDate();
     }
@@ -118,7 +129,18 @@ public class TransitionRunner {
     private static void runSetAction(Task task, Action action) {
         try {
             Field field = task.getClass().getDeclaredField(action.field);
-            field.set(task, getTypedValue(field.getType(), action.value));
+            Object typedValue = null;
+            if (action.value.startsWith("+"))
+            {
+                String value = action.value.replace("+", "");
+                Object fieldValue = field.get(task);
+                if (fieldValue instanceof String) {
+                    typedValue = ((String) fieldValue).concat(value);
+                }
+            }
+            if (typedValue == null)
+                typedValue = getTypedValue(field.getType(), action.value);
+            field.set(task, typedValue);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -167,6 +189,8 @@ public class TransitionRunner {
     }
 
     private static Date getTime(String value) {
+        if (value.equals("now"))
+            return new Date();
         try {
             return new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).parse(value);
         } catch (ParseException e) {
