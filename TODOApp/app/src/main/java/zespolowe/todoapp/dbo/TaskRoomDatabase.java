@@ -9,6 +9,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import java.util.Date;
+
 @Database(entities = { Task.class, Workflow.class }, version = 6, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class TaskRoomDatabase extends RoomDatabase {
@@ -179,6 +181,8 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
             task3.subject = "Broken printer";
             task3.type = workflow2.name;
             task3.xmlWorkflow = xml2;
+            task3.date = new Date();
+            task3.description = "Printer is broken. We need to fix this.";
             task3.state = task.GetWorkflow().state;
             taskDao.insert(task3);
             return null;

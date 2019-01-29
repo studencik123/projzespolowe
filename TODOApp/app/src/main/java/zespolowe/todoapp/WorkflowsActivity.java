@@ -85,7 +85,6 @@ public class WorkflowsActivity extends AppCompatActivity implements WorkflowsRec
     @Override
     public void onItemClick(View view, int position)
     {
-
         Intent intent = new Intent(WorkflowsActivity.this, WorkflowViewActivity.class);
         intent.putExtra("workflow_id", workflows.get(position).id);
         intent.putExtra("name", workflows.get(position).name);
@@ -104,7 +103,9 @@ public class WorkflowsActivity extends AppCompatActivity implements WorkflowsRec
 
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
-            public void onRightClicked(int position) {
+            public void onRightClicked(int position)
+            {
+                service.deleteTask(workflows.get(position).id);
                 workflowsRecyclerViewAdapter.workflows.remove(position);
                 workflowsRecyclerViewAdapter.notifyItemRemoved(position);
                 workflowsRecyclerViewAdapter.notifyItemRangeChanged(position, workflowsRecyclerViewAdapter.getItemCount());

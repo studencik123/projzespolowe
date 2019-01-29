@@ -8,13 +8,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import zespolowe.todoapp.dbo.Task;
 
 public class TaskActivity extends AppCompatActivity implements View.OnClickListener
 {
     int id;
-    TextView subjectTextView, stateTextView, workflowTextView, descriptionTextView;
-    Button doneTaskButton, delayTaskButton;
+    TextView subjectTextView, stateTextView, workflowTextView, descriptionTextView, dateTextView;
+    Button firstTaskButton, secondTaskButton, thirdTaskButton, fourthTaskButton, fifthTaskButton;
+    TasksService service;
+    Task task;
 
     String subject, state, workflowText, description;
     Date date;
@@ -25,8 +32,11 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+        service = new TasksService(getApplication());
+
         retrieveIntent();
         setupView();
+        updateButtons();
     }
 
     @Override
@@ -58,28 +68,35 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v)
     {
         // default method for handling onClick Events..
+
         switch (v.getId())
         {
-
             case R.id.button_1:
-                // zmiana stanu tasku na done
+                service.transition(id, firstTaskButton.getText().toString(), getApplicationContext());
                 break;
 
             case R.id.button_2:
-                // zmiana stanu tasku na delay
+                service.transition(id, secondTaskButton.getText().toString(), getApplicationContext());
                 break;
 
             case R.id.button_3:
-                // zmiana stanu tasku na delay
+                service.transition(id, thirdTaskButton.getText().toString(), getApplicationContext());
                 break;
 
             case R.id.button_4:
-                // zmiana stanu tasku na delay
+                service.transition(id, fourthTaskButton.getText().toString(), getApplicationContext());
+                break;
+
+            case R.id.button_5:
+                service.transition(id, fifthTaskButton.getText().toString(), getApplicationContext());
                 break;
 
             default:
                 break;
         }
+
+        updateView();
+        updateButtons();
     }
 
     public void retrieveIntent()
@@ -90,6 +107,51 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         date = new Date(getIntent().getExtras().getLong("date"));
         workflowText = getIntent().getExtras().getString("workflow");
         description = getIntent().getExtras().getString("desc");
+
+        task = service.getTask(id);
+    }
+
+    public void updateButtons()
+    {
+        List<String> states = service.getAvailableStates(id);
+        System.out.println("TUTAJ" + states);
+
+        firstTaskButton.setVisibility(View.GONE);
+        secondTaskButton.setVisibility(View.GONE);
+        thirdTaskButton.setVisibility(View.GONE);
+        fourthTaskButton.setVisibility(View.GONE);
+        fifthTaskButton.setVisibility(View.GONE);
+
+        if(states.size() == 0)
+        {
+            //donothing
+        }
+        if(states.size() >= 1)
+        {
+            firstTaskButton.setVisibility(View.VISIBLE);
+            firstTaskButton.setText(states.get(0));
+        }
+        if(states.size() >= 2)
+        {
+            secondTaskButton.setVisibility(View.VISIBLE);
+            secondTaskButton.setText(states.get(1));
+        }
+        if(states.size() >= 3)
+        {
+            thirdTaskButton.setVisibility(View.VISIBLE);
+            thirdTaskButton.setText(states.get(2));
+
+        }
+        if(states.size() >= 4)
+        {
+            fourthTaskButton.setVisibility(View.VISIBLE);
+            fourthTaskButton.setText(states.get(3));
+        }
+        if(states.size() >= 5)
+        {
+            fifthTaskButton.setVisibility(View.VISIBLE);
+            fifthTaskButton.setText(states.get(4));
+        }
     }
 
     public void setupView()
@@ -103,11 +165,41 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         descriptionTextView = (TextView) findViewById(R.id.textView_desc);
         descriptionTextView.setText(description);
 
-        //todo notes mapa data
-        doneTaskButton = (Button) findViewById(R.id.button_1);
-        delayTaskButton = (Button) findViewById(R.id.button_2);
-        doneTaskButton.setOnClickListener(this);
-        delayTaskButton.setOnClickListener(this);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        dateTextView = (TextView) findViewById(R.id.textView_date);
+        if (task.date != null)
+            dateTextView.setText(df.format(task.date));
+
+        //todo data
+        firstTaskButton = (Button) findViewById(R.id.button_1);
+        secondTaskButton = (Button) findViewById(R.id.button_2);
+        thirdTaskButton = (Button) findViewById(R.id.button_3);
+        fourthTaskButton = (Button) findViewById(R.id.button_4);
+        fifthTaskButton = (Button) findViewById(R.id.button_5);
+
+        firstTaskButton.setVisibility(View.GONE);
+        secondTaskButton.setVisibility(View.GONE);
+        thirdTaskButton.setVisibility(View.GONE);
+        fourthTaskButton.setVisibility(View.GONE);
+        fifthTaskButton.setVisibility(View.GONE);
+
+        firstTaskButton.setOnClickListener(this);
+        secondTaskButton.setOnClickListener(this);
+        thirdTaskButton.setOnClickListener(this);
+        fourthTaskButton.setOnClickListener(this);
+        fifthTaskButton.setOnClickListener(this);
+    }
+
+    public void updateView()
+    {
+        task = service.getTask(id);
+        subject = task.subject;
+        state = task.state;
+        description = task.description;
+
+        subjectTextView.setText(subject);
+        stateTextView.setText(state);
+        descriptionTextView.setText(description);
     }
 
     public void goToTaskEditActivity()

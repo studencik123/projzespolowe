@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,17 +21,22 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import zespolowe.todoapp.dbo.Task;
+import zespolowe.todoapp.dbo.Workflow;
 
 public class CreateTaskActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener
 {
     TextInputLayout taskNameInput, taskNotesInput;
+    TextInputEditText taskSubjectInputCreate, taskNotesInputCreate;
 
     TextView dateTextView;
     Button datePickButton;
     Spinner taskTypesSpinner;
+
+    TasksService service;
 
     Calendar calendar;
     DatePickerDialog datePickerDialog;
@@ -42,7 +48,7 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         @Override
         public void onClick(View view)
         {
-            createTaskButtonAction();
+            createTaskButtonAction(view);
         }
     };
 
@@ -53,6 +59,8 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         setContentView(R.layout.activity_create_task);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        service = new TasksService(getApplication());
 
         setupView();
         setupSpinnerItems();
@@ -77,49 +85,54 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
     }
 
     //tworzenie taska + dodac wyjscie z aktywnosci i dodanie do listy w DB
-    private void createTaskButtonAction()
+    private void createTaskButtonAction(View view)
+    {
+        createTask();
+
+        Snackbar snackbar = Snackbar.make(view, "Workflow has been created", Snackbar.LENGTH_LONG);
+        snackbar.show();
+
+        finish();
+    }
+
+    public void createTask()
     {
         Task task = new Task();
-        task.subject = taskNameInput.getEditText().toString();
-        task.xmlWorkflow = taskTypesSpinner.getSelectedItem().toString();
+        Date date = new Date();
+        task.subject = taskSubjectInputCreate.getText().toString();
+        task.type = taskTypesSpinner.getSelectedItem().toString();
+        task.description = taskNotesInputCreate.getText().toString();
+        task.date = date;
+
+        service.addTask(task);
     }
 
     public void setupView()
     {
         taskNameInput = (TextInputLayout) findViewById(R.id.task_name_input);
+        taskSubjectInputCreate = (TextInputEditText) findViewById(R.id.task_name_input_create);
         taskNotesInput = (TextInputLayout) findViewById(R.id.task_notes_input);
+        taskNotesInputCreate = (TextInputEditText) findViewById(R.id.task_notes_input_create);
         dateTextView = (TextView) findViewById(R.id.task_date_text);
         datePickButton = (Button) findViewById(R.id.button_date);
         taskTypesSpinner = (Spinner) findViewById(R.id.spinner_task_types);
+
     }
 
     public void setupSpinnerItems()
     {
-        // Initializing a String Array
-        String[] types = new String[]{
-                "Select type of a task",
-                "Car repair",
-                "Doctor appointment",
-        };
+        List<String> typesList = new ArrayList<>();
+        List<Workflow> workflowList = service.getWorkflows();
 
-        List<String> typesList = new ArrayList<>(Arrays.asList(types));
+        for(Workflow workflow : workflowList)
+        {
+            typesList.add(workflow.name);
+        }
 
         // Initializing an ArrayAdapter
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
                 this,R.layout.spinner_item,typesList) {
-            @Override
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
-                    // Disable the first item from Spinner
-                    // First item will be use for hint
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
+
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
@@ -127,15 +140,6 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
                 ((TextView) view).setGravity(Gravity.CENTER);
 
                 TextView tv = (TextView) view;
-                if(position == 0)
-                {
-                    // Set the hint text color gray
-                    tv.setTextColor(Color.GRAY);
-                }
-                else
-                {
-                    tv.setTextColor(Color.BLACK);
-                }
                 return view;
             }
         };

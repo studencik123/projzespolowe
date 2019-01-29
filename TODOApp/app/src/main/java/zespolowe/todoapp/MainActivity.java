@@ -59,6 +59,33 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        tasks.clear();
+        tasks.addAll(service.getList());
+        tasksRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        tasks.clear();
+        tasks.addAll(service.getList());
+        tasksRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        tasks.clear();
+        tasks.addAll(service.getList());
+        tasksRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -110,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
+                service.deleteTask(tasks.get(position).id);
                 tasksRecyclerViewAdapter.tasks.remove(position);
                 tasksRecyclerViewAdapter.notifyItemRemoved(position);
                 tasksRecyclerViewAdapter.notifyItemRangeChanged(position, tasksRecyclerViewAdapter.getItemCount());
@@ -125,21 +153,6 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
                 swipeController.onDraw(c);
             }
         });
-    }
-
-    //todo gdy bedzie DB z taskami tutaj operacja dodania nowego taska do DB
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        // Check which request we're responding to
-        if (requestCode == RC_LIST_STRING) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                // get the list of strings here
-
-                // do operations on the list
-            }
-        }
     }
 
     //przejscie do aktywnosci tworzenia Taska

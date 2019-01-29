@@ -31,6 +31,7 @@
             android:textSize="15dp"
             android:textStyle="bold"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:text="State: To Do"/>
 
         <LinearLayout
@@ -81,9 +82,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:visibility="visible"
+                android:text="Button"
                 android:textSize="10dp"
-                android:text="Button"/>
+                android:visibility="visible"/>
         </LinearLayout>
 
         <TextView
