@@ -137,7 +137,7 @@ public class TransitionRunner {
             String value = action.value.replace("+", "");
             Object fieldValue = field.get(task);
             if (fieldValue instanceof String) {
-                typedValue = ((String) fieldValue).concat(value);
+                typedValue = ((String) fieldValue).concat("\n" + value);
             }
             if (typedValue == null)
                 typedValue = getTypedValue(field.getType(), action.value);

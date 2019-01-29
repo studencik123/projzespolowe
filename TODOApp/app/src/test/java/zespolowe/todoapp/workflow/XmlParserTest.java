@@ -158,9 +158,10 @@ public class XmlParserTest {
         Workflow workflow = XmlParser.parse(xml);
         Task task = new Task();
         task.subject = "temat";
+        task.state = "start";
 
         assertTrue(TransitionRunner.runTransition(task, workflow.transitions.get(0), null));
-        assertEquals("nowy temat", task.subject);
+        assertEquals("temat\nnowy temat", task.subject);
     }
 
     @Test
