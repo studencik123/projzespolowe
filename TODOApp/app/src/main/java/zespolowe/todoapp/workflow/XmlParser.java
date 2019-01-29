@@ -22,14 +22,11 @@ public class XmlParser {
         Workflow workflow = new Workflow();
         try {
             Document doc = loadXMLFromString(xmlWorkflow);
-            NodeList states = doc.getElementsByTagName("state");
-            for (int i=0; i<states.getLength(); i++) {
-                Node node = states.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element state = (Element) node;
-                    String name = state.getAttribute("name");
-                    workflow.states.add(name);
-                }
+            Node workflowNode = doc.getElementsByTagName("workflow").item(0);
+            if (workflowNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element state = (Element) workflowNode;
+                String name = state.getAttribute("state");
+                workflow.state = name;
             }
 
             NodeList transitions = doc.getElementsByTagName("transition");

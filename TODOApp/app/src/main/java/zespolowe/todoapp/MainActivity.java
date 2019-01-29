@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zespolowe.todoapp.dbo.Task;
-import zespolowe.todoapp.dbo.TaskDao;
 
 public class MainActivity extends AppCompatActivity implements TasksRecyclerViewAdapter.ItemClickListener
 {
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_workflows)
+        if (id == R.id.action_settings)
         {
             goToWorkflowsActivity();
             return true;
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         intent.putExtra("task_id", tasks.get(position).id);
         intent.putExtra("subject", tasks.get(position).subject);
         intent.putExtra("state", tasks.get(position).state);
-        //intent.putExtra("date", tasks.get(position).date.getTime());
+        intent.putExtra("date", tasks.get(position).date);
         intent.putExtra("workflow", tasks.get(position).xmlWorkflow);
         startActivity(intent);
     }

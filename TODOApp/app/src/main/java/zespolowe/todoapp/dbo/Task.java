@@ -25,6 +25,10 @@ public class Task {
 
     public Date date;
 
+    public String description;
+
+    public String type;
+
     @NonNull
     @ColumnInfo(name = "workflow")
     public String xmlWorkflow;

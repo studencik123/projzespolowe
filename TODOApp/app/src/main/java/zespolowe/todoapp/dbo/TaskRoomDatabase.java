@@ -9,7 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-@Database(entities = { Task.class, Workflow.class }, version = 3, exportSchema = false)
+@Database(entities = { Task.class, Workflow.class }, version = 6, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class TaskRoomDatabase extends RoomDatabase {
     public abstract TaskDao taskDao();
@@ -72,12 +72,11 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
             taskDao.deleteAll();
             workflowDao.deleteAll();
 
-            String xml = "<workflow>\n" +
-                    "<state name=\"start\"/>\n" +
-                    "<state name=\"next\"/>\n" +
+            String xml = "<workflow state=\"start\">\n" +
                     "<transition from=\"start\" to=\"next\">\n" +
-                    "<action type=\"equals\" field=\"subject\" value=\"temat\"/>\n" +
-                    "<action type=\"set\" field=\"subject\" value=\"nowy temat\"/>\n" +
+                    "<action type=\"=\" field=\"subject\" value=\"temat\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\"Opis zadania\"/>\n" +
+                    "<action type=\"notify\" field=\"5000\" value=\"Treść powiadomienia\"/>\n" +
                     "</transition>\n" +
                     "</workflow>";
 
@@ -88,17 +87,23 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
 
             Task task = new Task();
             task.subject = "Visiting Doctor House";
+            task.type = workflow.name;
             task.xmlWorkflow = xml;
+            task.state = task.GetWorkflow().state;
             taskDao.insert(task);
 
             Task task2 = new Task();
             task2.subject = "Repairing car radio";
+            task2.type = workflow.name;
             task2.xmlWorkflow = xml;
+            task2.state = task.GetWorkflow().state;
             taskDao.insert(task2);
 
             Task task3 = new Task();
             task3.subject = "Shopping groceries";
+            task3.type = workflow.name;
             task3.xmlWorkflow = xml;
+            task3.state = task.GetWorkflow().state;
             taskDao.insert(task3);
             return null;
         }

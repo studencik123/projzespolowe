@@ -1,33 +1,55 @@
 package zespolowe.todoapp;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.RingtoneManager;
+import android.icu.util.Calendar;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import zespolowe.todoapp.dbo.Task;
 import zespolowe.todoapp.workflow.Action;
 import zespolowe.todoapp.workflow.Transition;
 
 public class TransitionRunner {
-    public static boolean runTransition(Task task, Transition transition) {
+    public static String NOTIFICATION_ID = "notification_id";
+    public static String NOTIFICATION_SUBJECT = "notification_subject";
+    public static String NOTIFICATION_TEXT = "notification_text";
+
+    public static List<String> getAvailableStates(Task task) {
+        List<String> list = new ArrayList<>();
+        for (Transition transition : task.GetWorkflow().transitions) {
+            if (validateTransition(task, transition))
+                list.add(transition.to);
+        }
+        return list;
+    }
+
+    private static boolean validateTransition(Task task, Transition transition) {
         for (Action validator : transition.validators) {
             if (!validate(task, validator))
                 return false;
         }
+        return true;
+    }
+
+    public static boolean runTransition(Task task, Transition transition, Context context) {
+        if (!validateTransition(task, transition))
+            return false;
         for (Action action : transition.actions) {
-            runAction(task, action);
+            runAction(task, action, context);
         }
         task.state = transition.to;
         return true;
@@ -49,29 +71,29 @@ public class TransitionRunner {
     private static boolean compareByType(Object fieldValue, String value, String type) {
         if (fieldValue instanceof String) {
             switch (type) {
-                case "equals":
+                case "=":
                     return value.equals(fieldValue);
-                case "notEqual":
+                case "!=":
                     return !value.equals(fieldValue);
                 default:
                     return false;
             }
         }
         if (fieldValue instanceof Date) {
-            try {
-                Date date = new SimpleDateFormat("dd/MM/yyyy").parse(value);
-                switch (type) {
-                    case "equals":
-                        return areDatesEqual((Date) fieldValue, date);
-                    case "notEqual":
-                        return !areDatesEqual((Date) fieldValue, date);
-                    case "greater":
-                        return ((Date) fieldValue).after(date);
-                    case "lower":
-                        return date.after((Date) fieldValue);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            Date date = getTime(value);
+            switch (type) {
+                case "=":
+                    return areDatesEqual((Date) fieldValue, date);
+                case "!=":
+                    return !areDatesEqual((Date) fieldValue, date);
+                case ">":
+                    return ((Date) fieldValue).after(date);
+                case "<":
+                    return date.after((Date) fieldValue);
+                case ">=":
+                    return !date.after((Date) fieldValue);
+                case "<=":
+                    return !((Date) fieldValue).after(date);
             }
             return false;
         }
@@ -82,13 +104,13 @@ public class TransitionRunner {
         return date1.getDate() == date2.getDate();
     }
 
-    private static void runAction(Task task, Action action) {
+    private static void runAction(Task task, Action action, Context context) {
         switch (action.type) {
             case "set":
                 runSetAction(task, action);
                 break;
             case "notify":
-                runNotifyAction();
+                runNotifyAction(task, action, context);
                 break;
         }
     }
@@ -106,41 +128,52 @@ public class TransitionRunner {
 
     private static Object getTypedValue(Type type, String value) {
         if (type == Date.class) {
-            try {
-                return new SimpleDateFormat("dd/MM/yyyy").parse(value);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            return getTime(value);
         }
         return value;
     }
 
-    private static void runNotifyAction() {
+    private static void runNotifyAction(Task task, Action action, Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+        Intent notificationIntent = new Intent(context, AlarmReceiver.class);
+        notificationIntent.putExtra(NOTIFICATION_ID, task.id);
+        notificationIntent.putExtra(NOTIFICATION_SUBJECT, task.subject);
+        notificationIntent.putExtra(NOTIFICATION_TEXT, action.value);
+
+        PendingIntent broadcast = PendingIntent.getBroadcast(context, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + getTime(task, action.field), broadcast);
     }
 
-//    public void scheduleNotification(Context context, long delay, int notificationId) {//delay is after how much time(in millis) from current time you want to schedule the notification
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-//                .setContentTitle(context.getString(R.string.title))
-//                .setContentText(context.getString(R.string.content))
-//                .setAutoCancel(true)
-//                .setSmallIcon(R.drawable.app_icon)
-//                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(R.drawable.app_icon)).getBitmap())
-//                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-//
-//        Intent intent = new Intent(context, YourActivity.class);
-//        PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        builder.setContentIntent(activity);
-//
-//        Notification notification = builder.build();
-//
-//        Intent notificationIntent = new Intent(context, MyNotificationPublisher.class);
-//        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, notificationId);
-//        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-//    }
+    private static long getTime(Task task, String fieldName) {
+        try {
+            Field field = task.getClass().getDeclaredField(fieldName);
+            Object fieldValue = field.get(task);
+            if (fieldValue instanceof Date) {
+                return ((Date) fieldValue).getTime() - new Date().getTime();
+            }
+        } catch (Exception e) {
+        }
+        Date date = getTime(fieldName);
+        if (date != null) {
+            return date.getTime() - new Date().getTime();
+        }
+        try {
+            return Long.parseLong(fieldName);
+        } catch (Exception e) {
+
+        }
+        return 1000;
+    }
+
+    private static Date getTime(String value) {
+        try {
+            return new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).parse(value);
+        } catch (ParseException e) {
+        }
+        try {
+            return new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(value);
+        } catch (ParseException e1) {}
+        return null;
+    }
 }
