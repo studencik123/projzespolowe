@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,6 @@ import android.view.View;
 
 import java.util.List;
 
-import zespolowe.todoapp.dbo.Task;
 import zespolowe.todoapp.dbo.Workflow;
 
 public class WorkflowsActivity extends AppCompatActivity implements WorkflowsRecyclerViewAdapter.ItemClickListener
@@ -26,7 +24,6 @@ public class WorkflowsActivity extends AppCompatActivity implements WorkflowsRec
     SwipeController swipeController = null;
     List<Workflow> workflows;
     TasksService service;
-
 
     private FloatingActionButton floatingActionButton;
     private View.OnClickListener floatingActionButtonListener = new View.OnClickListener()
@@ -45,6 +42,7 @@ public class WorkflowsActivity extends AppCompatActivity implements WorkflowsRec
         setContentView(R.layout.activity_workflows);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Workflows");
 
         service = new TasksService(getApplication());
 
@@ -56,10 +54,38 @@ public class WorkflowsActivity extends AppCompatActivity implements WorkflowsRec
         floatingActionButton.setOnClickListener(floatingActionButtonListener);
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        workflows.clear();
+        workflows.addAll(service.getWorkflows());
+        workflowsRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        workflows.clear();
+        workflows.addAll(service.getWorkflows());
+        workflowsRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        workflows.clear();
+        workflows.addAll(service.getWorkflows());
+        workflowsRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
     //przejscie do aktywnosci konkretnego workflow
     @Override
     public void onItemClick(View view, int position)
     {
+
         Intent intent = new Intent(WorkflowsActivity.this, WorkflowViewActivity.class);
         intent.putExtra("workflow_id", workflows.get(position).id);
         intent.putExtra("name", workflows.get(position).name);
@@ -98,6 +124,7 @@ public class WorkflowsActivity extends AppCompatActivity implements WorkflowsRec
 
     public void goToCreateWorkflowActivity(View view)
     {
-
+        Intent intent = new Intent(this, CreateWorkflowActivity.class);
+        startActivity(intent);
     }
 }

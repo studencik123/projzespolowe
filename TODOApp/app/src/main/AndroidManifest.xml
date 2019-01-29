@@ -35,6 +35,9 @@
         </activity>
 
         <receiver android:name=".AlarmReceiver"/>
+
+        <activity android:name=".CreateWorkflowActivity">
+        </activity>
     </application>
 
 </manifest>

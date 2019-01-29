@@ -62,6 +62,10 @@ public class TasksService {
         return workflowDao.getWorkflows();
     }
 
+    public Workflow getWorkflow(int id) {
+        return workflowDao.getWorkflow(id);
+    }
+
     public void addWorkflow(Workflow workflow) {
         workflowDao.insert(workflow);
     }
