@@ -30,7 +30,7 @@
                 tools:text="Robert Lewandowski"/>
 
             <TextView
-                android:id="@+id/nationality"
+                android:id="@+id/taskState"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="textEnd"

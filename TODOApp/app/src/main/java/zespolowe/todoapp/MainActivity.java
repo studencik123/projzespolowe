@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements TasksRecyclerView
         intent.putExtra("state", tasks.get(position).state);
         intent.putExtra("date", tasks.get(position).date);
         intent.putExtra("workflow", tasks.get(position).xmlWorkflow);
+        intent.putExtra("desc", tasks.get(position).description);
+
         startActivity(intent);
     }
 
