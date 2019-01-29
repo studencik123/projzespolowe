@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import zespolowe.todoapp.dbo.Task;
@@ -21,7 +24,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
 
     public class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        private TextView taskName, taskType, taskNotes, taskDate;
+        private TextView taskName, taskType, taskDate, taskState;
 
         public TaskViewHolder(View view)
         {
@@ -29,6 +32,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
             taskName = (TextView) view.findViewById(R.id.taskName);
             taskType = (TextView) view.findViewById(R.id.taskType);
             taskDate = (TextView) view.findViewById(R.id.taskDate);
+            taskState = (TextView) view.findViewById(R.id.taskState);
             view.setOnClickListener(this);
         }
 
@@ -60,8 +64,8 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
     {
         Task task = tasks.get(position);
         holder.taskName.setText(task.subject);
-        holder.taskType.setText("task.getTaskType()");
-        holder.taskDate.setText("task.getTaskDate()");
+        holder.taskType.setText(task.type);
+        holder.taskState.setText(task.state);
     }
 
     // Total number of rows

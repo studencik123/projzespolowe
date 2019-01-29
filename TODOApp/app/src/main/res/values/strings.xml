@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TODO App</string>
     <string name="action_workflows">Workflows</string>
+    <string name="action_task_edit">Edit task</string>
     <string name="title_activity_create_task">Create new task</string>
     <string-array name="types">
         <item>Car repair</item>
@@ -9,7 +10,7 @@
 
     <string name="taskView_actionbutton_done">Done</string>
     <string name="taskView_actionbutton_delay">Delay</string>
-    <string name="taskView_dateheader">Due date: testdate 30/11/2018</string>
+    <string name="taskView_dateheader">Due date:</string>
     <string name="taskView_notesheader">Additonal notes:</string>
     <string name="title_activity_workflows">WorkflowsActivity</string>
 </resources>
