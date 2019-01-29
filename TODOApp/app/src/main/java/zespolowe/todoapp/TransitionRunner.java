@@ -99,6 +99,8 @@ public class TransitionRunner {
             }
             return false;
         }
+        if (fieldValue == null && type.equals("notEqual") && value != null)
+            return true;
         return false;
     }
 
@@ -132,13 +134,10 @@ public class TransitionRunner {
         try {
             Field field = task.getClass().getDeclaredField(action.field);
             Object typedValue = null;
-            if (action.value.startsWith("+"))
-            {
-                String value = action.value.replace("+", "");
-                Object fieldValue = field.get(task);
-                if (fieldValue instanceof String) {
-                    typedValue = ((String) fieldValue).concat(value);
-                }
+            String value = action.value.replace("+", "");
+            Object fieldValue = field.get(task);
+            if (fieldValue instanceof String) {
+                typedValue = ((String) fieldValue).concat(value);
             }
             if (typedValue == null)
                 typedValue = getTypedValue(field.getType(), action.value);

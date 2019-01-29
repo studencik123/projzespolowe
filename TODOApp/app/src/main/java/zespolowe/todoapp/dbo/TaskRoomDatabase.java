@@ -102,39 +102,39 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
             String xml2 = "<workflow state=\"To do\">\n" +
                     "<transition from=\"To do\" to=\"Plugged\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%plugged%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" plugged\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"Reset printer\" to=\"Plugged\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%plugged%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" plugged\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"Reset PC\" to=\"Plugged\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%plugged%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" plugged\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"To do\" to=\"Reset printer\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%printer reset%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" printer reset\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"Plugged\" to=\"Reset printer\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%printer reset%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" printer reset\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"Reset PC\" to=\"Reset printer\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%printer reset%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" printer reset\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"To do\" to=\"Reset PC\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%PC reset%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" PC reset\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"Plugged\" to=\"Reset PC\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%PC reset%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" PC reset\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"Reset printer\" to=\"Reset PC\">\n" +
                     "<action type=\"notEqual\" field=\"description\" value=\"%PC reset%\"/>\n" +
-                    "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                    "<action type=\"set\" field=\"description\" value=\" PC reset\"/>\n" +
                     "</transition>\n" +
                     "<transition from=\"Plugged\" to=\"Call IT\">\n" +
                     "<action type=\"equals\" field=\"description\" value=\"%plugged%\"/>\n" +

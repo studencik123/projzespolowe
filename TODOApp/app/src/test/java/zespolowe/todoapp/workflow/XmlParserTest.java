@@ -146,7 +146,7 @@ public class XmlParserTest {
     }
 
     @Test
-    public void parse__and_run_valid_xml()
+    public void parse_and_run_valid_xml()
     {
         String xml = "<workflow state=\"start\">\n" +
                 "<transition from=\"start\" to=\"next\">\n" +
@@ -161,5 +161,78 @@ public class XmlParserTest {
 
         assertTrue(TransitionRunner.runTransition(task, workflow.transitions.get(0), null));
         assertEquals("nowy temat", task.subject);
+    }
+
+    @Test
+    public void parse__and_run_valid_xml()
+    {
+        String xml = "<workflow state=\"To do\">\n" +
+                "<transition from=\"To do\" to=\"Plugged\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%plugged%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Reset printer\" to=\"Plugged\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%plugged%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Reset PC\" to=\"Plugged\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%plugged%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ plugged\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"To do\" to=\"Reset printer\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Plugged\" to=\"Reset printer\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Reset PC\" to=\"Reset printer\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ printer reset\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"To do\" to=\"Reset PC\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Plugged\" to=\"Reset PC\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Reset printer\" to=\"Reset PC\">\n" +
+                "<action type=\"notEqual\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"+ PC reset\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Plugged\" to=\"Call IT\">\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%plugged%\"/>\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"All failed\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Reset printer\" to=\"Call IT\">\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%plugged%\"/>\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"All failed\"/>\n" +
+                "</transition>\n" +
+                "<transition from=\"Reset PC\" to=\"Call IT\">\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%plugged%\"/>\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%printer reset%\"/>\n" +
+                "<action type=\"equals\" field=\"description\" value=\"%PC reset%\"/>\n" +
+                "<action type=\"set\" field=\"description\" value=\"All failed\"/>\n" +
+                "</transition>\n" +
+                "</workflow>";
+
+        Workflow workflow = XmlParser.parse(xml);
+        Task task = new Task();
+        task.subject = "temat";
+        task.state = "To do";
+        task.workflow = workflow;
+        task.xmlWorkflow = xml;
+
+        assertEquals(3, TransitionRunner.getAvailableStates(task).size());
+
+        assertTrue(TransitionRunner.runTransition(task, workflow.transitions.get(0), null));
+        assertEquals("temat", task.subject);
     }
 }

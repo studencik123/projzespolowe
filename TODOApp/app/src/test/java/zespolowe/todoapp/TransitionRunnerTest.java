@@ -49,7 +49,7 @@ public class TransitionRunnerTest {
         transition.actions.add(new Action("set", "date", "null"));
 
         assertTrue(TransitionRunner.runTransition(task, transition, null));
-        assertEquals("nowy temat", task.subject);
+        assertEquals("tematnowy temat", task.subject);
         assertEquals(null, task.date);
     }
 
