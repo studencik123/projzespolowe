@@ -51,11 +51,12 @@ public class TasksService {
     public void transition(int taskId, String stateTo, Context context) {
         Task task = getTask(taskId);
         for (Transition transition : task.GetWorkflow().transitions) {
-            if (transition.from.equals(task.state) && transition.to.equals(stateTo)){
+            if (transition.from.equals(task.state) && transition.to.equals(stateTo)) {
                 TransitionRunner.runTransition(task, transition, context);
                 break;
             }
         }
+        updateTask(task);
     }
 
     public List<Workflow> getWorkflows() {
