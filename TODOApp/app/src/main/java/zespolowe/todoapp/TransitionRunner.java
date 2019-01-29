@@ -38,6 +38,8 @@ public class TransitionRunner {
     }
 
     private static boolean validateTransition(Task task, Transition transition) {
+        if (!task.state.equals(transition.from))
+            return false;
         for (Action validator : transition.validators) {
             if (!validate(task, validator))
                 return false;

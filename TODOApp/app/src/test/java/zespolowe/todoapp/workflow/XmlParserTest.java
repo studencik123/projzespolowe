@@ -61,7 +61,6 @@ public class XmlParserTest {
                 "</transition>\n" +
                 "</workflow>";
 
-        System.out.println(xml);
         Workflow workflow = XmlParser.parse(xml);
         assertEquals("To do", workflow.state);
         assertEquals("To do", workflow.transitions.get(0).from);
